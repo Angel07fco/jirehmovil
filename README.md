@@ -150,13 +150,13 @@ To install the project follow the steps below:
 1. Clonar el repositorio:
 
 ```console
-git clone https://github.com/Angel07fco/movil-jireh.git
+git clone https://github.com/Angel07fco/jirehmovil.git
 ```
 
 2. Navegar al Directorio del Proyecto:
 
 ```console
-cd movil-jireh
+cd jirehmovil
 ```
 
 3. Instalar las dependencias del proyecto utilizando el gestor de paquetes de su elección:
