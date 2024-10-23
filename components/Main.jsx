@@ -1,28 +1,61 @@
-import { useEffect, useState } from "react";
-import { Text, ActivityIndicator, View } from "react-native";
-import { getLatestGames } from "../lib/metacritic";
+import { View, Image } from "react-native";
 import { Screen } from "./Screen";
+import Header from "./Header";
+import { CardCircle } from "./ui/Card/CardCircle";
+import { TitleText } from "./ui/Text";
+
+const splashImage = require("../assets/slider.jpg");
 
 export default function Main() {
-  const [games, setGames] = useState([]);
-
-  useEffect(() => {
-    getLatestGames().then((games) => {
-      setGames(games);
-    });
-  }, []);
-
   return (
     <Screen>
-      {games.length === 0 ? (
-        <ActivityIndicator color={"#fff"} size={"large"} />
-      ) : (
-        <View>
-          <View className="bg-secondaryBlue">
-            <View></View>
-          </View>
+      <Header />
+      <View className="w-full mb-5">
+        <Image
+          source={splashImage}
+          className="w-full h-40 rounded-2xl"
+          resizeMode="cover"
+        />
+      </View>
+      <TitleText>Servicios</TitleText>
+      <View className="flex-row flex-wrap justify-between w-full gap-y-4">
+        <View className="w-[30%]">
+          <CardCircle
+            urlImage="https://cdn-icons-png.flaticon.com/512/219/219986.png"
+            name="Urgencias"
+          />
         </View>
-      )}
+        <View className="w-[30%]">
+          <CardCircle
+            urlImage="https://cdn-icons-png.flaticon.com/512/219/219986.png"
+            name="Urgencias"
+          />
+        </View>
+        <View className="w-[30%]">
+          <CardCircle
+            urlImage="https://cdn-icons-png.flaticon.com/512/219/219986.png"
+            name="Urgencias"
+          />
+        </View>
+        <View className="w-[30%]">
+          <CardCircle
+            urlImage="https://cdn-icons-png.flaticon.com/512/219/219986.png"
+            name="Urgencias"
+          />
+        </View>
+        <View className="w-[30%]">
+          <CardCircle
+            urlImage="https://cdn-icons-png.flaticon.com/512/219/219986.png"
+            name="Urgencias"
+          />
+        </View>
+        <View className="w-[30%]">
+          <CardCircle
+            urlImage="https://cdn-icons-png.flaticon.com/512/219/219986.png"
+            name="Urgencias"
+          />
+        </View>
+      </View>
     </Screen>
   );
 }

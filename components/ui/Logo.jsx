@@ -1,4 +1,5 @@
 import Svg, { Path } from "react-native-svg";
+const Image = require("../assets/jireh.jpg");
 
 export const Logo = (props) => (
   <Svg xmlns="http://www.w3.org/2000/svg" width={176} height={40} {...props}>
