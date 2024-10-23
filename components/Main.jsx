@@ -1,7 +1,7 @@
 import { View, Image } from "react-native";
 import { Screen } from "./Screen";
 import Header from "./Header";
-import { CardCircle } from "./ui/Card/CardCircle";
+import { CardCircle } from "./ui/card/CardCircle";
 import { TitleText } from "./ui/Text";
 
 const splashImage = require("../assets/slider.jpg");
@@ -9,8 +9,8 @@ const splashImage = require("../assets/slider.jpg");
 export default function Main() {
   return (
     <Screen>
-      <Header />
       <View className="w-full mb-5">
+        <Header />
         <Image
           source={splashImage}
           className="w-full h-40 rounded-2xl"
