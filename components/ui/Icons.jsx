@@ -11,3 +11,7 @@ export const EyeIcon = (props) => (
 export const BarsIcon = (props) => (
   <FontAwesome6 name="bars" size={32} color="black" {...props} />
 );
+
+export const ArrowLeftIcon = (props) => (
+  <FontAwesome6 name="circle-arrow-left" size={32} color="black" {...props} />
+);
