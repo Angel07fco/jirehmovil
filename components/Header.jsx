@@ -1,11 +1,13 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { BarsIcon } from "./ui/Icons";
-import { Link } from "expo-router";
+import { Link, useNavigation } from "expo-router";
 
 const Header = () => {
+  const navigation = useNavigation();
+
   return (
-    <View className="bg-lightBlue rounded-lg flex-row items-center justify-between mt-5 mb-10">
+    <View className="bg-lightBlue rounded-lg flex-row items-center justify-between mt-10 mb-10">
       <View className="flex-row items-center">
         <Image
           source={{
@@ -18,7 +20,7 @@ const Header = () => {
             Hola, buenos días!
           </Text>
           <Text className="text-gray-600">AngelMH</Text> */}
-          <Link href="/loginScreen">
+          <Link href="/auth/loginScreen">
             <Text className="font-bold text-lg text-darkBlue underline">
               Accede a JIREH
             </Text>
@@ -26,7 +28,7 @@ const Header = () => {
         </View>
       </View>
 
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.openDrawer()}>
         <BarsIcon size={28} />
       </TouchableOpacity>
     </View>

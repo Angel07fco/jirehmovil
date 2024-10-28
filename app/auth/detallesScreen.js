@@ -1,12 +1,20 @@
 import { View, Image, Text, TouchableOpacity } from "react-native";
-import { TitleText } from "../components/ui/Text";
-import { Button } from "../components/ui/Buttons/Button";
-import { ArrowLeftIcon } from "../components/ui/Icons";
+import { TitleText } from "../../components/ui/Text";
+import { Button } from "../../components/ui/Buttons/Button";
+import { ArrowLeftIcon } from "../../components/ui/Icons";
+import { useRouter } from "expo-router";
 
 export default function Index() {
+  const router = useRouter();
+
   return (
     <View className="flex-1 bg-primaryBlue p-4">
-      <TouchableOpacity className="mb-4">
+      <TouchableOpacity
+        onPress={() => {
+          router.push("/");
+        }}
+        className="my-6"
+      >
         <ArrowLeftIcon />
       </TouchableOpacity>
 

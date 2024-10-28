@@ -20,7 +20,7 @@ const ButtonGroup = () => {
       <View className="flex-1">
         <CustomButton
           title="Iniciar Sesión"
-          onPress={() => router.push("/loginScreen")}
+          onPress={() => router.push("/auth/loginScreen")}
           style="bg-primaryBlue"
           textStyle="text-secondaryBlue"
         />
@@ -29,7 +29,7 @@ const ButtonGroup = () => {
       <View className="flex-1">
         <CustomButton
           title="Nuevo Usuario"
-          onPress={() => router.push("/registerScreen")}
+          onPress={() => router.push("/auth/registerScreen")}
           style="bg-secondaryBlue"
           textStyle="text-primaryBlue"
         />

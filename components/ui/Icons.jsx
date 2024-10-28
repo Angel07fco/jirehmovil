@@ -15,3 +15,15 @@ export const BarsIcon = (props) => (
 export const ArrowLeftIcon = (props) => (
   <FontAwesome6 name="circle-arrow-left" size={32} color="black" {...props} />
 );
+
+export const LocationIcon = (props) => (
+  <FontAwesome6 name="location-dot" size={32} color="black" {...props} />
+);
+
+export const WhatsAppIcon = (props) => (
+  <FontAwesome6 name="whatsapp" size={32} color="black" {...props} />
+);
+
+export const CallIcon = (props) => (
+  <FontAwesome6 name="phone" size={32} color="black" {...props} />
+);
