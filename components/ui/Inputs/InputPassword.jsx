@@ -22,7 +22,7 @@ export const InputPassword = ({
         onChangeText={onChangeText}
         placeholder={placeholder}
         secureTextEntry={isSecure}
-        className="border border-gray-300 rounded-md p-2 w-full text-base"
+        className="border border-secondaryBlue text-secondaryBlue rounded-md p-2 w-full text-base"
       />
       {isPassword && (
         <TouchableOpacity

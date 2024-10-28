@@ -12,7 +12,7 @@ export const Input = ({
       onChangeText={onChangeText}
       placeholder={placeholder}
       secureTextEntry={secureTextEntry}
-      className="border border-gray-300 rounded-md p-2 w-full text-base"
+      className="border border-secondaryBlue text-secondaryBlue rounded-md p-2 w-full text-base"
     />
   );
 };
