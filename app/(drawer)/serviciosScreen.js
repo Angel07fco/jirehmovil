@@ -1,8 +1,8 @@
 import { View, ScrollView } from "react-native";
-import { Screen } from "../components/Screen";
-import Header from "../components/Header";
-import { TitleText } from "../components/ui/Text";
-import CardServicios from "../components/ui/card/CardServicios";
+import { Screen } from "../../components/Screen";
+import Header from "../../components/Header";
+import { TitleText } from "../../components/ui/Text";
+import CardServicios from "../../components/ui/card/CardServicios";
 import { useRouter } from "expo-router";
 
 export default function Index() {

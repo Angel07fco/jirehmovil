@@ -1,8 +1,8 @@
 import { Text, View, ScrollView, Image } from "react-native";
-import { Screen } from "../components/Screen";
-import Header from "../components/Header";
-import { TitleText } from "../components/ui/Text";
-import CardValores from "../components/ui/card/CardValores";
+import { Screen } from "../../components/Screen";
+import Header from "../../components/Header";
+import { TitleText } from "../../components/ui/Text";
+import CardValores from "../../components/ui/card/CardValores";
 
 export default function nosotros() {
   return (
@@ -21,10 +21,10 @@ export default function nosotros() {
               />
             </View>
             <View className="w-1/2">
-              <Text className="text-secondaryBlue font-bold text-7xl">
+              <Text className="text-secondaryBlue font-bold text-6xl">
                 100%
               </Text>
-              <Text className="text-secondaryBlue font-bold text-6xl">
+              <Text className="text-secondaryBlue font-bold text-5xl">
                 Am💙r
               </Text>
               <Text className="text-secondaryBlue font-bold text-xl">

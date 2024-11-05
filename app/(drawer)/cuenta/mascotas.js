@@ -1,15 +1,18 @@
 import { View, ScrollView } from "react-native";
-import { ArrowLeftIcon } from "../../components/ui/Icons";
-import { Screen } from "../../components/Screen";
-import { TitleText } from "../../components/ui/Text";
-import CardMascotas from "../../components/ui/card/CardMascotas";
-import { Button } from "../../components/ui/Buttons/Button";
+import { ArrowLeftIcon } from "../../../components/ui/Icons";
+import { Screen } from "../../../components/Screen";
+import { TitleText } from "../../../components/ui/Text";
+import CardMascotas from "../../../components/ui/card/CardMascotas";
+import { Button } from "../../../components/ui/Buttons/Button";
+import { useRouter } from "expo-router";
 
 export default function mascotas() {
+  const router = useRouter();
+
   return (
     <Screen>
-      <View className="w-full mb-5 pt-10">
-        <ArrowLeftIcon />
+      <View className="w-full mb-5">
+        <ArrowLeftIcon onPress={() => router.back()} />
         <ScrollView showsVerticalScrollIndicator={false}>
           <View className="flex items-center">
             <TitleText>Mis mascotas</TitleText>

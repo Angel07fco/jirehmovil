@@ -7,7 +7,7 @@ const splashImage = require("../../assets/jireh.jpg");
 export default function Index() {
   return (
     <View className="flex-1 px-10 pt-5 bg-white">
-      <View className="items-end mt-4">
+      <View className="items-end">
         <Link href="/">
           <Text className="font-bold text-lg text-darkBlue underline">
             Salir

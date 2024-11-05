@@ -7,10 +7,12 @@ const CardServicios = ({ imageUrl, title, description, onPress }) => {
       onPress={onPress}
       className="flex-row items-center py-4 bg-lightBlue rounded-lg"
     >
-      <Image source={{ uri: imageUrl }} className="w-14 h-14 mr-5" />
+      <Image source={{ uri: imageUrl }} className="w-14 h-14 mr-5 rounded-lg" />
       <View className="flex-1">
         <Text className="font-bold text-darkBlue text-lg">{title}</Text>
-        <Text className="text-gray-600 text-sm">{description}</Text>
+        <Text className="text-gray-600 text-sm" numberOfLines={2}>
+          {description}
+        </Text>
       </View>
     </TouchableOpacity>
   );

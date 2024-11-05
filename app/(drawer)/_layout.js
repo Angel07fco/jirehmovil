@@ -13,7 +13,7 @@ export default function RootLayout() {
       <Drawer.Screen name="serviciosScreen" options={{ title: "Servicios" }} />
       <Drawer.Screen name="cuenta" options={{ title: "Mi Cuenta" }} />
       <Drawer.Screen name="citas" options={{ title: "Citas" }} />
-      <Drawer.Screen name="auth" options={{ title: "Contacto" }} />
+      <Drawer.Screen name="contacto" options={{ title: "Contacto" }} />
       <Drawer.Screen name="nosotros" options={{ title: "¿Quiénes somos?" }} />
     </Drawer>
   );

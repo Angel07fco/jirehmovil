@@ -7,7 +7,6 @@ import {
   CallIcon,
   LocationIcon,
 } from "../../components/ui/Icons";
-import Contacto from "../../components/form/Contacto";
 
 export default function nosotros() {
   return (
@@ -47,11 +46,6 @@ export default function nosotros() {
             </Text>
             <Text>Bulevar Adolfo López S/N Colonia Aviación Civil</Text>
           </View>
-
-          <View className="my-4 flex items-center">
-            <TitleText>¿Tienes alguna duda?</TitleText>
-          </View>
-          <Contacto />
         </View>
       </ScrollView>
     </Screen>

@@ -3,7 +3,6 @@ import { Stack } from "expo-router";
 export default function AuthLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="contacto" options={{ title: "Contacto" }} />
       <Stack.Screen name="citauno" options={{ title: "Cita1" }} />
       <Stack.Screen name="citados" options={{ title: "Cita2" }} />
       <Stack.Screen name="citatres" options={{ title: "Cita3" }} />

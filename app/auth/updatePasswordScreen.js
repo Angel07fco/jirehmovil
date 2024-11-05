@@ -1,11 +1,11 @@
 import { View, Image, Text } from "react-native";
-import MethodCode from "../../components/form/MethodCode";
-import { Link, useLocalSearchParams } from "expo-router"; // Importa useLocalSearchParams
+import { Link, useLocalSearchParams } from "expo-router";
+import UpdatePassword from "../../components/form/UpdatePassword";
 
 const splashImage = require("../../assets/jireh.jpg");
 
-export default function methodCodeScreen() {
-  const { email } = useLocalSearchParams(); // Usa useLocalSearchParams para obtener el parámetro email
+export default function updatePasswordScreen() {
+  const { email } = useLocalSearchParams(); // Usamos useLocalSearchParams
 
   return (
     <View className="flex-1 px-10 pt-5 bg-white">
@@ -22,7 +22,7 @@ export default function methodCodeScreen() {
           className="w-2/6 h-2/6"
           resizeMode="contain"
         />
-        <MethodCode email={email} />
+        <UpdatePassword email={email} />
       </View>
     </View>
   );

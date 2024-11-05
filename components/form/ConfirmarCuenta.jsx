@@ -8,8 +8,8 @@ import { TitleText } from "../ui/Text";
 import { verifyAccount } from "../../lib/auth";
 import { useRouter } from "expo-router";
 
-const MethodCode = ({ email }) => {
-  const [formData, setFormData] = useState({ code: "" });
+const ConfirmarCuenta = ({ email }) => {
+  const [formData, setFormData] = useState({ email, otp: "" });
   const [errors, setErrors] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -25,13 +25,14 @@ const MethodCode = ({ email }) => {
   };
 
   const handleSubmit = async () => {
+    // Validación de código
     const validationErrors = {};
     const regexCode = /^\d{4}$/;
 
-    if (!formData.code.trim()) {
-      validationErrors.code = "Por favor ingresa tu código.";
-    } else if (!regexCode.test(formData.code.trim())) {
-      validationErrors.code =
+    if (!formData.otp.trim()) {
+      validationErrors.otp = "Por favor ingresa tu código.";
+    } else if (!regexCode.test(formData.otp.trim())) {
+      validationErrors.otp =
         "El código debe ser de exactamente 4 dígitos numéricos.";
     }
 
@@ -46,41 +47,38 @@ const MethodCode = ({ email }) => {
 
     try {
       console.log("Datos enviados para verificación:", formData);
-      const result = await verifyAccount({ email, otp: formData.code });
+      const result = await verifyAccount(formData);
 
       if (result.error) {
         setModalStatus("error");
         setModalMessage(`Error: ${result.error}`);
-        setFormData((prev) => ({ ...prev, code: "" }));
+        setFormData((prev) => ({ ...prev, otp: "" }));
       } else {
         setModalStatus("success");
-        setModalMessage("Código verificado exitosamente");
+        setModalMessage("Cuenta verificada exitosamente");
         setTimeout(() => {
           setShowModal(false);
-          router.push({
-            pathname: "/auth/updatePasswordScreen",
-            params: { email },
-          });
+          router.push("/auth/loginScreen");
         }, 1500);
       }
     } catch (error) {
       setModalStatus("error");
-      setModalMessage("Error en la verificación del código");
-      console.error("Error en la verificación del código:", error);
-      setFormData((prev) => ({ ...prev, code: "" }));
+      setModalMessage("Error en la verificación de cuenta");
+      console.error("Error en la verificación de cuenta:", error);
+      setFormData((prev) => ({ ...prev, otp: "" })); // Limpia el campo del código
     }
   };
 
   const closeModal = () => {
     setShowModal(false);
     setErrors({});
-    setFormData((prev) => ({ ...prev, code: "" }));
+    setFormData((prev) => ({ ...prev, otp: "" })); // Limpia el campo del código
   };
 
   return (
     <View className="w-full">
       <View>
-        <TitleText>Recuperación de contraseña</TitleText>
+        <TitleText style="text-center">Activar mi cuenta</TitleText>
         <Text
           className="font-bold text-base mb-4"
           style={{ textDecorationLine: "underline" }}
@@ -90,16 +88,16 @@ const MethodCode = ({ email }) => {
         <View>
           <Label>Código</Label>
           <Input
-            value={formData.code}
-            onChangeText={(value) => handleChange("code", value)}
+            value={formData.otp}
+            onChangeText={(value) => handleChange("otp", value)}
             placeholder="Ingrese su código de 4 dígitos"
             keyboardType="numeric"
           />
-          {errors.code && <Text className="text-red-500">{errors.code}</Text>}
+          {errors.otp && <Text className="text-red-500">{errors.otp}</Text>}
         </View>
 
         <View className="mt-6">
-          <Button onPress={handleSubmit}>Verificar código</Button>
+          <Button onPress={handleSubmit}>Confirmar</Button>
         </View>
       </View>
 
@@ -114,4 +112,4 @@ const MethodCode = ({ email }) => {
   );
 };
 
-export default MethodCode;
+export default ConfirmarCuenta;

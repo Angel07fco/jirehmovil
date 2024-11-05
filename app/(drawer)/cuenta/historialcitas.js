@@ -1,20 +1,23 @@
 import { View, ScrollView, Text } from "react-native";
-import { Screen } from "../../components/Screen";
-import { TitleText } from "../../components/ui/Text";
-import CardOption from "../../components/ui/card/CardOption";
+import { Screen } from "../../../components/Screen";
+import { TitleText } from "../../../components/ui/Text";
+import CardOption from "../../../components/ui/card/CardOption";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
   VerifyIcon,
   OpinionIcon,
   CalendarIcon,
-} from "../../components/ui/Icons";
+} from "../../../components/ui/Icons";
+import { useRouter } from "expo-router";
 
 export default function historialcitas() {
+  const router = useRouter();
+
   return (
     <Screen>
-      <View className="w-full mb-5 pt-10">
-        <ArrowLeftIcon />
+      <View className="w-full mb-5">
+        <ArrowLeftIcon onPress={() => router.back()} />
         <ScrollView showsVerticalScrollIndicator={false}>
           <View className="flex items-center">
             <TitleText>Mis citas</TitleText>

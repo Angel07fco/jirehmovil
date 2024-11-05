@@ -1,8 +1,8 @@
 import { Text, View, ScrollView } from "react-native";
-import { Screen } from "../components/Screen";
-import Header from "../components/Header";
-import { TitleText } from "../components/ui/Text";
-import { Button } from "../components/ui/Buttons/Button";
+import { Screen } from "../../components/Screen";
+import Header from "../../components/Header";
+import { TitleText } from "../../components/ui/Text";
+import { Button } from "../../components/ui/Buttons/Button";
 import { useRouter } from "expo-router";
 
 export default function citas() {

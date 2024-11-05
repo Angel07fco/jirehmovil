@@ -1,10 +1,12 @@
 import { View, Image, Text } from "react-native";
+import { Link, useLocalSearchParams } from "expo-router"; // Cambiamos a useLocalSearchParams
 import MethodSecretQuestion from "../../components/form/MethodSecretQuestion";
-import { Link } from "expo-router";
 
 const splashImage = require("../../assets/jireh.jpg");
 
-export default function Index() {
+export default function methodSecretQuestionScreen() {
+  const { question_secret, reply_secret, email } = useLocalSearchParams(); // Usamos useLocalSearchParams
+
   return (
     <View className="flex-1 px-10 pt-5 bg-white">
       <View className="items-end mt-4">
@@ -20,7 +22,11 @@ export default function Index() {
           className="w-2/6 h-2/6"
           resizeMode="contain"
         />
-        <MethodSecretQuestion />
+        <MethodSecretQuestion
+          question={question_secret}
+          expectedAnswer={reply_secret}
+          email={email}
+        />
       </View>
     </View>
   );

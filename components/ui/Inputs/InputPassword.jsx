@@ -6,10 +6,9 @@ export const InputPassword = ({
   value,
   onChangeText,
   placeholder,
-  secureTextEntry,
-  isPassword = false,
+  isPassword = true, // Cambia el valor por defecto de isPassword a true
 }) => {
-  const [isSecure, setIsSecure] = useState(secureTextEntry);
+  const [isSecure, setIsSecure] = useState(true); // Inicializa isSecure como true para que el texto esté oculto por defecto
 
   const toggleSecureEntry = () => {
     setIsSecure(!isSecure);
@@ -29,7 +28,7 @@ export const InputPassword = ({
           onPress={toggleSecureEntry}
           className="absolute right-3 top-3"
         >
-          {isSecure ? <EyeSlashIcon size={20} /> : <EyeIcon size={20} />}
+          {isSecure ? <EyeIcon size={20} /> : <EyeSlashIcon size={20} />}
         </TouchableOpacity>
       )}
     </View>

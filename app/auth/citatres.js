@@ -1,8 +1,8 @@
-import { View, ScrollView, Text } from "react-native";
+import { View, ScrollView } from "react-native";
 import { Screen } from "../../components/Screen";
 import IndicatorCita from "../../components/ui/IndicatorCita";
 import CardCita from "../../components/ui/card/CardCita";
-import { SubTitleText, TitleText } from "../../components/ui/Text";
+import { TitleText } from "../../components/ui/Text";
 import { Button } from "../../components/ui/Buttons/Button";
 import { useRouter } from "expo-router";
 
