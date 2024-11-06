@@ -2,45 +2,40 @@ import { View, Image, Text, TouchableOpacity } from "react-native";
 import { TitleText } from "../../components/ui/Text";
 import { Button } from "../../components/ui/Buttons/Button";
 import { ArrowLeftIcon } from "../../components/ui/Icons";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 
-export default function Index() {
+export default function DetallesScreen() {
   const router = useRouter();
+  const { service } = useLocalSearchParams();
+  const serviceData = service ? JSON.parse(service) : {}; // Convertimos el string a un objeto
 
   return (
     <View className="flex-1 bg-primaryBlue p-4">
-      <TouchableOpacity
-        onPress={() => {
-          router.push("/");
-        }}
-        className="my-6"
-      >
+      <TouchableOpacity onPress={() => router.back()} className="mb-6">
         <ArrowLeftIcon />
       </TouchableOpacity>
 
       <Image
-        source={{
-          uri: "https://www.consalud.es/animalcare/uploads/s1/25/04/50/3/mascotas.jpeg",
-        }}
+        source={{ uri: serviceData.img }}
         className="w-full h-56 rounded-lg mb-4"
         resizeMode="cover"
       />
 
-      {/* Contenido */}
       <View className="bg-lightBlue rounded-lg p-4">
         <View className="flex items-center">
-          <TitleText>Limpieza dental</TitleText>
+          <TitleText>{serviceData.name}</TitleText>
         </View>
         <Text className="text-secondaryBlue text-base mb-4 mt-2">
-          Una buena salud bucal es esencial para el bienestar general de tu
-          mascota. Nuestro servicio de limpieza dental veterinaria utiliza
-          técnicas profesionales para eliminar el sarro y la placa, ayudando a
-          prevenir problemas dentales y mantener una sonrisa brillante y
-          saludable.
+          {serviceData.description}
         </Text>
 
-        {/* Botón de agendar */}
-        <Button onPress={() => {}}>Agendar una cita</Button>
+        <Button
+          onPress={() => {
+            router.push("/citas");
+          }}
+        >
+          Agendar una cita
+        </Button>
       </View>
     </View>
   );
