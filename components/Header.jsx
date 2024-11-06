@@ -5,7 +5,7 @@ import { Link, useNavigation } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { obtenerInfoUser } from "../lib/auth";
 
-const DEFAULT_IMAGE = "https://cdn-icons-png.flaticon.com/512/219/219986.png"; // Imagen por defecto
+const DEFAULT_IMAGE = "https://cdn-icons-png.flaticon.com/512/219/219986.png";
 
 const Header = () => {
   const navigation = useNavigation();
@@ -19,14 +19,13 @@ const Header = () => {
         const token = await AsyncStorage.getItem("userEmail");
 
         if (token) {
-          // Si el token existe, obtiene la información del usuario
           const userInfo = await obtenerInfoUser(token);
-          setUser(userInfo); // Establece el usuario directamente aquí
+          setUser(userInfo);
         }
 
         if (userData) {
           const parsedUser = JSON.parse(userData);
-          setUser((prev) => ({ ...prev, ...parsedUser })); // Combina la información del usuario con el token
+          setUser((prev) => ({ ...prev, ...parsedUser }));
         }
       } catch (error) {
         console.error("Error al obtener el usuario de AsyncStorage:", error);
@@ -51,7 +50,7 @@ const Header = () => {
       <View className="flex-row items-center">
         <Image
           source={{
-            uri: user?.imagen || DEFAULT_IMAGE, // Usa la imagen del usuario o la imagen por defecto
+            uri: user?.imagen || DEFAULT_IMAGE,
           }}
           className="w-12 h-12 rounded-full mr-4"
         />
