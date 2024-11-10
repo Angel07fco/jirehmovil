@@ -33,19 +33,19 @@ export default function perfil() {
                 icon={FileIcon}
                 title="Información personal"
                 rightIcon={ArrowRightIcon}
-                onPress={() => console.log("Información personal presionada")}
+                onPress={() => router.push("/auth/infoPersonal")}
               />
               <CardOption
                 icon={PerfilIcon}
                 title="Datos de la cuenta"
                 rightIcon={ArrowRightIcon}
-                onPress={() => console.log("Datos de la cuenta presionada")}
+                onPress={() => router.push("/auth/infoCuenta")}
               />
               <CardOption
                 icon={SecurityIcon}
                 title="Seguridad"
                 rightIcon={ArrowRightIcon}
-                onPress={() => console.log("Seguridad presionada")}
+                onPress={() => router.push("/auth/seguridad")}
               />
             </View>
           </View>

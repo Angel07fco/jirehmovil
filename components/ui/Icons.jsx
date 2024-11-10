@@ -85,3 +85,8 @@ export const VerifyIcon = (props) => (
 export const CalendarIcon = (props) => (
   <FontAwesome6 name="calendar-days" size={24} color="black" {...props} />
 );
+
+// Icono de buscar
+export const SearchIcon = (props) => (
+  <FontAwesome6 name="searchengin" size={24} color="black" {...props} />
+);
