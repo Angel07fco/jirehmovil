@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import { BarsIcon } from "./ui/Icons";
 import { Link, useNavigation } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -39,8 +45,8 @@ const Header = () => {
 
   if (loading) {
     return (
-      <View className="bg-lightBlue rounded-lg flex-row items-center justify-between mt-5 mb-10">
-        <Text>Cargando...</Text>
+      <View className="flex-1 justify-center items-center">
+        <ActivityIndicator size="large" color="#0000ff" />
       </View>
     );
   }
