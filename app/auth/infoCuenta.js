@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
-import { View, Text, ActivityIndicator } from "react-native";
+import { View, Text, ActivityIndicator, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { obtenerInfoUser } from "../../lib/auth";
 import { TitleText } from "../../components/ui/Text";
+import { ArrowLeftIcon } from "../../components/ui/Icons";
+import { useRouter } from "expo-router";
 
 export default function infoCuenta() {
+  const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -35,9 +38,15 @@ export default function infoCuenta() {
   }
   return (
     <View className="w-full">
-      <View className="bg-secondaryBlue flex items-center justify-center w-full h-20">
-        <Text className="text-primaryBlue font-bold text-2xl">
-          Datos de la cuenta
+      <View className="bg-secondaryBlue flex-row items-center w-full h-20">
+        <TouchableOpacity
+          onPress={() => router.push("/cuenta/perfil")}
+          className="ml-4"
+        >
+          <ArrowLeftIcon color="white" />
+        </TouchableOpacity>
+        <Text className="text-primaryBlue font-bold text-2xl ml-5">
+          Información de la cuenta
         </Text>
       </View>
 

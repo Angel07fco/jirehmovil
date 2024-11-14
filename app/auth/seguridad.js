@@ -12,6 +12,7 @@ import { obtenerInfoUser, updateUserData } from "../../lib/auth";
 import { TitleText } from "../../components/ui/Text";
 import { useRouter } from "expo-router";
 import { Picker } from "@react-native-picker/picker";
+import { ArrowLeftIcon } from "../../components/ui/Icons";
 
 export default function Seguridad() {
   const router = useRouter();
@@ -126,8 +127,14 @@ export default function Seguridad() {
 
   return (
     <View className="w-full">
-      <View className="bg-secondaryBlue flex items-center justify-center w-full h-20">
-        <Text className="text-primaryBlue font-bold text-2xl">
+      <View className="bg-secondaryBlue flex-row items-center w-full h-20">
+        <TouchableOpacity
+          onPress={() => router.push("/cuenta/perfil")}
+          className="ml-4"
+        >
+          <ArrowLeftIcon color="white" />
+        </TouchableOpacity>
+        <Text className="text-primaryBlue font-bold text-2xl ml-5">
           Seguridad y contraseñas
         </Text>
       </View>

@@ -11,7 +11,10 @@ export default function DetallesScreen() {
 
   return (
     <View className="flex-1 bg-primaryBlue p-4">
-      <TouchableOpacity onPress={() => router.back()} className="mb-6">
+      <TouchableOpacity
+        onPress={() => router.push("/serviciosScreen")}
+        className="mb-6"
+      >
         <ArrowLeftIcon />
       </TouchableOpacity>
 

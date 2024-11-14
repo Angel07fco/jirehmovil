@@ -18,7 +18,7 @@ export default function DetallesPet() {
   const petDetails = pet ? JSON.parse(pet) : {};
 
   const handleBack = () => {
-    router.back();
+    router.push("/cuenta/mascotas");
   };
 
   // Estados

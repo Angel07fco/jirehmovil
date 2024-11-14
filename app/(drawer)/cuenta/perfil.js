@@ -159,7 +159,7 @@ export default function perfil() {
   return (
     <Screen>
       <View className="w-full mb-5">
-        <ArrowLeftIcon onPress={() => router.back()} />
+        <ArrowLeftIcon onPress={() => router.push("/")} />
         <ScrollView showsVerticalScrollIndicator={false}>
           <View className="flex items-center">
             <TitleText>{user?.user || "Usuario"}</TitleText>
