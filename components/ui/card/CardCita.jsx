@@ -1,18 +1,23 @@
-import { View, Image } from "react-native";
+import { View, Image, TouchableOpacity } from "react-native";
 
-const CardCita = ({ imagenUri, children }) => {
+const CardCita = ({ isSelected, onPress, imagenUri, children }) => {
   return (
-    <View className="w-full flex-row items-center py-2 border-y border-t-secondaryBlue">
+    <TouchableOpacity
+      onPress={onPress}
+      className={`w-full flex-row items-center py-2 border-y border-t-secondaryBlue ${
+        isSelected ? "bg-primaryBlue" : "bg-transparent"
+      }`}
+    >
       <View className="flex justify-center">
         <Image
           source={{
             uri: imagenUri,
           }}
-          className="w-20 h-20"
+          className="w-20 h-20 ml-4 rounded-full"
         />
       </View>
       <View className="ml-4 flex-1">{children}</View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

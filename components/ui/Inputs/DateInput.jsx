@@ -6,6 +6,9 @@ export const DateInput = ({ value, onChangeDate, placeholder }) => {
   const [showPicker, setShowPicker] = useState(false);
   const [date, setDate] = useState(value ? new Date(value) : new Date());
 
+  // Establecer la fecha mínima (tomando el día de mañana)
+  const minimumDate = new Date(new Date().setDate(new Date().getDate() + 1));
+
   const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
 
@@ -35,6 +38,7 @@ export const DateInput = ({ value, onChangeDate, placeholder }) => {
           mode="date"
           display="default"
           onChange={handleDateChange}
+          minimumDate={minimumDate} // Añadimos la propiedad minimumDate
         />
       )}
     </View>
