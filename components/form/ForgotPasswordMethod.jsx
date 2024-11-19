@@ -84,7 +84,6 @@ const ForgotPasswordMethod = () => {
           setErrors({ submit: response.error });
         }
       } catch (error) {
-        console.error("Error inesperado:", error);
         setFormData({ email: "" });
         setSelectedOption(null);
         setErrors({

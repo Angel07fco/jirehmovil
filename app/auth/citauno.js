@@ -1,4 +1,4 @@
-import { View, ScrollView, ActivityIndicator, Alert } from "react-native";
+import { View, ScrollView, ActivityIndicator, Alert, Text } from "react-native";
 import { Screen } from "../../components/Screen";
 import IndicatorCita from "../../components/ui/IndicatorCita";
 import CardCita from "../../components/ui/card/CardCita";
@@ -9,6 +9,7 @@ import { Button } from "../../components/ui/Buttons/Button";
 import { useRouter } from "expo-router";
 import { getMedicos } from "../../lib/medicos";
 import { obtenerHorariosDisponibles } from "../../lib/horarios";
+import { CustomModal } from "../../components/ui/Modal";
 
 export default function CitaUno() {
   const [selectedDate, setSelectedDate] = useState("");
@@ -16,6 +17,12 @@ export default function CitaUno() {
   const [medicos, setMedicos] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const [showModal, setShowModal] = useState(false);
+
+  const handleModalClose = () => {
+    setShowModal(false);
+    router.push("/");
+  };
 
   useEffect(() => {
     const fetchMedicos = async () => {
@@ -124,6 +131,12 @@ export default function CitaUno() {
             </View>
           </View>
         </View>
+
+        <CustomModal visible={showModal} onClose={handleModalClose}>
+          <Text className="text-xl font-semibold mb-4">
+            Debes acceder primero
+          </Text>
+        </CustomModal>
       </ScrollView>
     </Screen>
   );

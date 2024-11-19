@@ -48,7 +48,7 @@ const EditPerfil = () => {
         setDireccion(userInfo?.domicilio?.direccion || "");
       }
     } catch (error) {
-      console.error("Error al obtener el usuario:", error);
+      return error;
     } finally {
       setLoading(false);
     }

@@ -34,7 +34,7 @@ const Header = () => {
           setUser((prev) => ({ ...prev, ...parsedUser }));
         }
       } catch (error) {
-        console.error("Error al obtener el usuario de AsyncStorage:", error);
+        return error;
       } finally {
         setLoading(false);
       }

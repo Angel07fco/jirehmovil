@@ -3,8 +3,6 @@ const validationsForm = (form) => {
   let regexName = /^[a-zA-Z0-9]+$/;
   let regexEmail = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
   let regexPhone = /^[0-9]{10}$/;
-  let regexPass =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#%$])[A-Za-z\d@#%$]{8,20}$/;
 
   if (!form.user.trim()) {
     errors.user = "El campo 'Usuario' es requerido.";

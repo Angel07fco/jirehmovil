@@ -46,7 +46,6 @@ const ConfirmarCuenta = ({ email }) => {
     setModalStatus("loading");
 
     try {
-      console.log("Datos enviados para verificación:", formData);
       const result = await verifyAccount(formData);
 
       if (result.error) {
@@ -64,7 +63,6 @@ const ConfirmarCuenta = ({ email }) => {
     } catch (error) {
       setModalStatus("error");
       setModalMessage("Error en la verificación de cuenta");
-      console.error("Error en la verificación de cuenta:", error);
       setFormData((prev) => ({ ...prev, otp: "" })); // Limpia el campo del código
     }
   };

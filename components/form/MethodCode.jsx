@@ -45,7 +45,6 @@ const MethodCode = ({ email }) => {
     setModalStatus("loading");
 
     try {
-      console.log("Datos enviados para verificación:", formData);
       const result = await verifyAccount({ email, otp: formData.code });
 
       if (result.error) {
@@ -66,7 +65,6 @@ const MethodCode = ({ email }) => {
     } catch (error) {
       setModalStatus("error");
       setModalMessage("Error en la verificación del código");
-      console.error("Error en la verificación del código:", error);
       setFormData((prev) => ({ ...prev, code: "" }));
     }
   };

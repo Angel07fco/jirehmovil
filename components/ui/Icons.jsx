@@ -90,3 +90,8 @@ export const CalendarIcon = (props) => (
 export const SearchIcon = (props) => (
   <FontAwesome6 name="searchengin" size={24} color="black" {...props} />
 );
+
+// Icono de cerrar sesión
+export const LogoutIcon = (props) => (
+  <MaterialIcons name="logout" size={24} color="white" {...props} />
+);
