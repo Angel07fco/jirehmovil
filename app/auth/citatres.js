@@ -19,7 +19,7 @@ import { getServices } from "../../lib/services";
 import { useEffect, useState } from "react";
 import { obtenerInfoUser } from "../../lib/auth";
 import { addNewCita } from "../../lib/citas";
-import { feedbackPostAgendamientoCita } from "../../lib/feedback";
+import { feedbackFunction } from "../../lib/feedback";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
 
@@ -35,7 +35,6 @@ export default function citatres() {
   const [pregunta1, setPregunta1] = useState(0);
   const [pregunta2, setPregunta2] = useState(0);
   const [pregunta3, setPregunta3] = useState(0);
-  const [comentariosModal, setComentariosModal] = useState("");
   const [responseErrors, setResponseErrors] = useState("");
   const [responseSuccess, setResponseSuccess] = useState("");
   const [isModalVisible, setModalVisible] = useState(false);
@@ -118,9 +117,15 @@ export default function citatres() {
   // Función para cerrar el modal
   const closeModal = () => {
     setModalVisible(false);
+    router.push("/cuenta/historialcitas");
   };
 
-  // Función para manejar el envío del formulario
+  const handleSelect = (pregunta, valor) => {
+    if (pregunta === 1) setPregunta1(valor);
+    else if (pregunta === 2) setPregunta2(valor);
+    else if (pregunta === 3) setPregunta3(valor);
+  };
+
   const handleSubmitFeedback = async () => {
     if (pregunta1 === 0 || pregunta2 === 0 || pregunta3 === 0) {
       setResponseErrors("Por favor, responde todas las preguntas.");
@@ -130,15 +135,14 @@ export default function citatres() {
     const feedbackData = {
       userId: user,
       citaId: idCita,
+      dispositivo: "movil",
       pregunta1,
       pregunta2,
       pregunta3,
-      comentarios: comentariosModal,
     };
 
     try {
-      const { success, message } =
-        await feedbackPostAgendamientoCita(feedbackData);
+      const { success, message } = await feedbackFunction(feedbackData);
 
       if (success) {
         setResponseSuccess(message);
@@ -146,7 +150,6 @@ export default function citatres() {
         setPregunta1(0);
         setPregunta2(0);
         setPregunta3(0);
-        setComentariosModal("");
         router.push("/cuenta/historialcitas");
       } else {
         setResponseErrors(message || "Hubo un error al enviar tu feedback.");
@@ -227,81 +230,111 @@ export default function citatres() {
 
               <View className="mb-4">
                 <Text>
-                  1. ¿Qué tan fácil fue agendar tu cita a través de la
-                  aplicación móvil?
+                  ¿Qué tan fácil fue el proceso de "agendar una cita"?
                 </Text>
-                <Picker
-                  selectedValue={pregunta1}
-                  onValueChange={(itemValue) => setPregunta1(itemValue)}
-                  style={{
-                    height: 40,
-                    borderColor: "gray",
-                    borderWidth: 1,
-                  }}
-                >
-                  <Picker.Item label="Seleccione una respuesta" value="" />
-                  <Picker.Item label="Muy insatisfecho" value={1} />
-                  <Picker.Item label="Insatisfecho" value={2} />
-                  <Picker.Item label="Neutral" value={3} />
-                  <Picker.Item label="Satisfecho" value={4} />
-                  <Picker.Item label="Muy satisfecho" value={5} />
-                </Picker>
+                <View className="w-full flex-row items-center justify-between px-4 mt-3">
+                  {[
+                    { label: "Fácil", emoji: "😃", value: 1 },
+                    { label: "Regular", emoji: "😐", value: 2 },
+                    { label: "Difícil", emoji: "😕", value: 3 },
+                  ].map((item) => (
+                    <TouchableOpacity
+                      key={item.value}
+                      onPress={() => handleSelect(1, item.value)}
+                      className={`cursor-pointer rounded-lg p-1 ${
+                        pregunta1 === item.value
+                          ? "bg-secondaryBlue"
+                          : "bg-primaryBlue"
+                      }`}
+                    >
+                      <Text className="text-center text-4xl mb-1">
+                        {item.emoji}
+                      </Text>
+                      <Text
+                        className={`text-center text-sm font-bold ${
+                          pregunta1 === item.value
+                            ? "text-primaryBlue"
+                            : "text-secondaryBlue"
+                        }`}
+                      >
+                        {item.label}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
               </View>
 
               <View className="mb-4">
                 <Text>
-                  2. ¿La información proporcionada durante el proceso de
-                  agendamiento fue clara y suficiente?
+                  ¿Encontraste toda la información que necesitabas para "agendar
+                  tu cita"?
                 </Text>
-                <Picker
-                  selectedValue={pregunta2}
-                  onValueChange={(itemValue) => setPregunta2(itemValue)}
-                  style={{
-                    height: 40,
-                    borderColor: "gray",
-                    borderWidth: 1,
-                  }}
-                >
-                  <Picker.Item label="Seleccione una respuesta" value="" />
-                  <Picker.Item label="Muy confusa" value={1} />
-                  <Picker.Item label="Confusa" value={2} />
-                  <Picker.Item label="Neutral" value={3} />
-                  <Picker.Item label="Clara" value={4} />
-                  <Picker.Item label="Muy clara" value={5} />
-                </Picker>
+                <View className="w-full flex-row items-center justify-between px-4 mt-3">
+                  {[
+                    { label: "Sí", emoji: "😃", value: 1 },
+                    { label: "No", emoji: "😕", value: 2 },
+                  ].map((item) => (
+                    <TouchableOpacity
+                      key={item.value}
+                      onPress={() => handleSelect(2, item.value)}
+                      className={`cursor-pointer rounded-lg p-1 ${
+                        pregunta2 === item.value
+                          ? "bg-secondaryBlue"
+                          : "bg-primaryBlue"
+                      }`}
+                    >
+                      <Text className="text-center text-4xl mb-1">
+                        {item.emoji}
+                      </Text>
+                      <Text
+                        className={`text-center text-sm font-bold ${
+                          pregunta2 === item.value
+                            ? "text-primaryBlue"
+                            : "text-secondaryBlue"
+                        }`}
+                      >
+                        {item.label}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
               </View>
 
               <View className="mb-4">
                 <Text>
-                  3. ¿Qué tan satisfecho estás con el proceso de agendamiento de
-                  cita en general?
+                  ¿Cómo calificarías tu satisfacción general con el proceso de
+                  "agendar una cita"?
                 </Text>
-                <Picker
-                  selectedValue={pregunta3}
-                  onValueChange={(itemValue) => setPregunta3(itemValue)}
-                  style={{
-                    height: 40,
-                    borderColor: "gray",
-                    borderWidth: 1,
-                  }}
-                >
-                  <Picker.Item label="Seleccione una respuesta" value="" />
-                  <Picker.Item label="Muy insatisfecho" value={1} />
-                  <Picker.Item label="Insatisfecho" value={2} />
-                  <Picker.Item label="Neutral" value={3} />
-                  <Picker.Item label="Satisfecho" value={4} />
-                  <Picker.Item label="Muy satisfecho" value={5} />
-                </Picker>
-              </View>
-
-              <View className="mb-4">
-                <Text>Comentarios adicionales:</Text>
-                <TextInput
-                  className="border border-gray-500 h-20 px-2 text-secondaryBlue"
-                  value={comentariosModal}
-                  onChangeText={setComentariosModal}
-                  multiline
-                />
+                <View className="w-full flex-row items-center justify-between px-4 mt-3">
+                  {[
+                    { label: "Buena", emoji: "😃", value: 1 },
+                    { label: "Neutral", emoji: "😐", value: 2 },
+                    { label: "Mala", emoji: "😕", value: 3 },
+                  ].map((item) => (
+                    <TouchableOpacity
+                      key={item.value}
+                      onPress={() => handleSelect(3, item.value)}
+                      className={`cursor-pointer rounded-lg p-1 ${
+                        pregunta3 === item.value
+                          ? "bg-secondaryBlue"
+                          : "bg-primaryBlue"
+                      }`}
+                    >
+                      <Text className="text-center text-4xl mb-1">
+                        {item.emoji}
+                      </Text>
+                      <Text
+                        className={`text-center text-sm font-bold ${
+                          pregunta3 === item.value
+                            ? "text-primaryBlue"
+                            : "text-secondaryBlue"
+                        }`}
+                      >
+                        {item.label}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
               </View>
 
               <Text className="text-red-500 text-center">{responseErrors}</Text>

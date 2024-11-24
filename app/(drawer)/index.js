@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import Main from "../../components/Main";
-import Splash from "../Splash"; // Asegúrate de que la ruta es correcta
+import Splash from "../Splash";
 
 export default function Index() {
   const [isLoading, setIsLoading] = useState(true);

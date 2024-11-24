@@ -86,7 +86,7 @@ export default function CuentaTabsLayout() {
         <Tabs.Screen
           name="historialcitas"
           options={{
-            title: "Historial de citas",
+            title: "Mis citas",
             tabBarIcon: ({ color, size }) => (
               <HistorialCitasIcon color={color} size={size} />
             ),
