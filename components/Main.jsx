@@ -5,13 +5,18 @@ import { CardCircle } from "./ui/card/CardCircle";
 import { TitleText } from "./ui/Text";
 import CardPlanVet from "./ui/card/CardPlanVet";
 import { getServices } from "../lib/services";
+import { obtenerInfoUser } from "../lib/auth";
 import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
+import FeedbackModal from "../components/ui/FeedbackModal";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Main() {
   const router = useRouter();
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const [isFeedbackModalVisible, setFeedbackModalVisible] = useState(false);
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -24,7 +29,24 @@ export default function Main() {
       setLoading(false);
     };
 
+    const fetchUser = async () => {
+      try {
+        const token = await AsyncStorage.getItem("userEmail");
+        if (token) {
+          const userInfo = await obtenerInfoUser(token);
+          setUser(userInfo);
+
+          if (!userInfo.feedbackCheck && userInfo.citaCreated) {
+            setFeedbackModalVisible(true);
+          }
+        }
+      } catch (error) {
+        console.error("Error al obtener el usuario:", error);
+      }
+    };
+
     fetchServices();
+    fetchUser();
   }, []);
 
   if (loading) {
@@ -93,6 +115,16 @@ export default function Main() {
           </View>
         </ScrollView>
       </ScrollView>
+
+      {/* Modal de Feedback */}
+      <FeedbackModal
+        visible={isFeedbackModalVisible}
+        onClose={() => {
+          setFeedbackModalVisible(false);
+          router.push("/cuenta/historialcitas");
+        }}
+        userId={user?.id}
+      />
     </Screen>
   );
 }

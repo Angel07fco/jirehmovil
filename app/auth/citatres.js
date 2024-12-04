@@ -1,13 +1,5 @@
-import {
-  View,
-  ScrollView,
-  ActivityIndicator,
-  Text,
-  Alert,
-  Modal,
-  TouchableOpacity,
-  TextInput,
-} from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, ScrollView, ActivityIndicator, Text, Alert } from "react-native";
 import { Screen } from "../../components/Screen";
 import IndicatorCita from "../../components/ui/IndicatorCita";
 import CardCita from "../../components/ui/card/CardCita";
@@ -15,13 +7,11 @@ import { TitleText } from "../../components/ui/Text";
 import { Button } from "../../components/ui/Buttons/Button";
 import { Input } from "../../components/ui/Inputs/Input";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import { getServices } from "../../lib/services";
-import { useEffect, useState } from "react";
 import { obtenerInfoUser } from "../../lib/auth";
 import { addNewCita } from "../../lib/citas";
-import { feedbackFunction } from "../../lib/feedback";
+import { getServices } from "../../lib/services";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Picker } from "@react-native-picker/picker";
+import FeedbackModal from "../../components/ui/FeedbackModal";
 
 export default function citatres() {
   const router = useRouter();
@@ -31,29 +21,8 @@ export default function citatres() {
   const [selectedServicioId, setSelectedServicioId] = useState(null);
   const [comentarios, setComentarios] = useState("");
   const [user, setUser] = useState(null);
-
-  const [pregunta1, setPregunta1] = useState(0);
-  const [pregunta2, setPregunta2] = useState(0);
-  const [pregunta3, setPregunta3] = useState(0);
-  const [responseErrors, setResponseErrors] = useState("");
-  const [responseSuccess, setResponseSuccess] = useState("");
-  const [isModalVisible, setModalVisible] = useState(false);
-
-  const [idCita, setIdCita] = useState("");
-
-  const fetchUser = async () => {
-    try {
-      const token = await AsyncStorage.getItem("userEmail");
-      if (token) {
-        const userInfo = await obtenerInfoUser(token);
-        setUser(userInfo.id);
-      }
-    } catch (error) {
-      console.error("Error al obtener el usuario:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [isFeedbackModalVisible, setFeedbackModalVisible] = useState(false);
+  const [idCita, setIdCita] = useState(null);
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -65,12 +34,24 @@ export default function citatres() {
       }
       setLoading(false);
     };
+
+    const fetchUser = async () => {
+      try {
+        const token = await AsyncStorage.getItem("userEmail");
+        if (token) {
+          const userInfo = await obtenerInfoUser(token);
+          setUser(userInfo);
+        }
+      } catch (error) {
+        console.error("Error al obtener el usuario:", error);
+      }
+    };
+
     fetchServices();
     fetchUser();
   }, []);
 
   const handleAgendarCita = async () => {
-    // Validación
     if (!selectedServicioId) {
       Alert.alert("Error", "Por favor, seleccione un servicio.");
       return;
@@ -81,9 +62,11 @@ export default function citatres() {
       return;
     }
 
+    setLoading(true);
+
     try {
       const data = {
-        usuario: user,
+        usuario: user?.id,
         medico: medico,
         fecha: fecha,
         hora: hora,
@@ -92,70 +75,28 @@ export default function citatres() {
         comentarios: comentarios,
       };
 
-      console.log("Datos enviados:", data); // Verifica que los datos sean correctos
       const result = await addNewCita(data);
 
-      setIdCita(result.idCita);
-
       if (result.success) {
-        openModal();
+        setIdCita(result.idCita);
+
+        // Verificar feedbackCheck después de crear la cita
+        const token = await AsyncStorage.getItem("userEmail");
+        const userInfo = await obtenerInfoUser(token);
+
+        if (!userInfo.feedbackCheck) {
+          setFeedbackModalVisible(true);
+        } else {
+          Alert.alert("Su cita", result.message);
+          router.push("/cuenta/historialcitas");
+        }
       } else {
-        Alert.alert("Error", result.msg);
+        Alert.alert("Error", result.message);
       }
     } catch (error) {
       Alert.alert("Error", "Ocurrió un error al agendar la cita");
     } finally {
       setLoading(false);
-    }
-  };
-
-  // Función para abrir el modal
-  const openModal = () => {
-    setModalVisible(true);
-  };
-
-  // Función para cerrar el modal
-  const closeModal = () => {
-    setModalVisible(false);
-    router.push("/cuenta/historialcitas");
-  };
-
-  const handleSelect = (pregunta, valor) => {
-    if (pregunta === 1) setPregunta1(valor);
-    else if (pregunta === 2) setPregunta2(valor);
-    else if (pregunta === 3) setPregunta3(valor);
-  };
-
-  const handleSubmitFeedback = async () => {
-    if (pregunta1 === 0 || pregunta2 === 0 || pregunta3 === 0) {
-      setResponseErrors("Por favor, responde todas las preguntas.");
-      return;
-    }
-
-    const feedbackData = {
-      userId: user,
-      citaId: idCita,
-      dispositivo: "movil",
-      pregunta1,
-      pregunta2,
-      pregunta3,
-    };
-
-    try {
-      const { success, message } = await feedbackFunction(feedbackData);
-
-      if (success) {
-        setResponseSuccess(message);
-        setResponseErrors("");
-        setPregunta1(0);
-        setPregunta2(0);
-        setPregunta3(0);
-        router.push("/cuenta/historialcitas");
-      } else {
-        setResponseErrors(message || "Hubo un error al enviar tu feedback.");
-      }
-    } catch (error) {
-      setResponseErrors("Error al enviar el feedback. Intenta nuevamente.");
     }
   };
 
@@ -196,173 +137,36 @@ export default function citatres() {
             onChangeText={(text) => setComentarios(text)}
           />
 
-          <View className="mt-10 mb-5">
+          <View className="mt-10">
             <Button onPress={handleAgendarCita}>Agendar cita</Button>
-          </View>
-
-          <View className="flex-row items-center justify-between">
-            <View className="w-[40%]">
-              <Button
-                onPress={() => router.back()}
-                style="border border-secondaryBlue bg-fondoApp"
-                style2="text-secondaryBlue"
-              >
-                Anterior
-              </Button>
-            </View>
-            <View className="w-[40%]">
-              <Button onPress={() => router.push("/citas")}>Cancelar</Button>
-            </View>
           </View>
         </View>
 
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={isModalVisible}
-          onRequestClose={closeModal}
-        >
-          <View className="flex-1 justify-center items-center bg-black bg-opacity-50">
-            <View className="w-11/12 p-5 bg-white rounded-lg">
-              <Text className="text-secondaryBlue font-bold text-center text-lg mb-4">
-                Evaluación de satisfacción
-              </Text>
-
-              <View className="mb-4">
-                <Text>
-                  ¿Qué tan fácil fue el proceso de "agendar una cita"?
-                </Text>
-                <View className="w-full flex-row items-center justify-between px-4 mt-3">
-                  {[
-                    { label: "Fácil", emoji: "😃", value: 1 },
-                    { label: "Regular", emoji: "😐", value: 2 },
-                    { label: "Difícil", emoji: "😕", value: 3 },
-                  ].map((item) => (
-                    <TouchableOpacity
-                      key={item.value}
-                      onPress={() => handleSelect(1, item.value)}
-                      className={`cursor-pointer rounded-lg p-1 ${
-                        pregunta1 === item.value
-                          ? "bg-secondaryBlue"
-                          : "bg-primaryBlue"
-                      }`}
-                    >
-                      <Text className="text-center text-4xl mb-1">
-                        {item.emoji}
-                      </Text>
-                      <Text
-                        className={`text-center text-sm font-bold ${
-                          pregunta1 === item.value
-                            ? "text-primaryBlue"
-                            : "text-secondaryBlue"
-                        }`}
-                      >
-                        {item.label}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              </View>
-
-              <View className="mb-4">
-                <Text>
-                  ¿Encontraste toda la información que necesitabas para "agendar
-                  tu cita"?
-                </Text>
-                <View className="w-full flex-row items-center justify-between px-4 mt-3">
-                  {[
-                    { label: "Sí", emoji: "😃", value: 1 },
-                    { label: "No", emoji: "😕", value: 2 },
-                  ].map((item) => (
-                    <TouchableOpacity
-                      key={item.value}
-                      onPress={() => handleSelect(2, item.value)}
-                      className={`cursor-pointer rounded-lg p-1 ${
-                        pregunta2 === item.value
-                          ? "bg-secondaryBlue"
-                          : "bg-primaryBlue"
-                      }`}
-                    >
-                      <Text className="text-center text-4xl mb-1">
-                        {item.emoji}
-                      </Text>
-                      <Text
-                        className={`text-center text-sm font-bold ${
-                          pregunta2 === item.value
-                            ? "text-primaryBlue"
-                            : "text-secondaryBlue"
-                        }`}
-                      >
-                        {item.label}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              </View>
-
-              <View className="mb-4">
-                <Text>
-                  ¿Cómo calificarías tu satisfacción general con el proceso de
-                  "agendar una cita"?
-                </Text>
-                <View className="w-full flex-row items-center justify-between px-4 mt-3">
-                  {[
-                    { label: "Buena", emoji: "😃", value: 1 },
-                    { label: "Neutral", emoji: "😐", value: 2 },
-                    { label: "Mala", emoji: "😕", value: 3 },
-                  ].map((item) => (
-                    <TouchableOpacity
-                      key={item.value}
-                      onPress={() => handleSelect(3, item.value)}
-                      className={`cursor-pointer rounded-lg p-1 ${
-                        pregunta3 === item.value
-                          ? "bg-secondaryBlue"
-                          : "bg-primaryBlue"
-                      }`}
-                    >
-                      <Text className="text-center text-4xl mb-1">
-                        {item.emoji}
-                      </Text>
-                      <Text
-                        className={`text-center text-sm font-bold ${
-                          pregunta3 === item.value
-                            ? "text-primaryBlue"
-                            : "text-secondaryBlue"
-                        }`}
-                      >
-                        {item.label}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              </View>
-
-              <Text className="text-red-500 text-center">{responseErrors}</Text>
-              <Text className="text-green-500 text-center">
-                {responseSuccess}
-              </Text>
-
-              <TouchableOpacity
-                onPress={handleSubmitFeedback}
-                className="w-full bg-secondaryBlue py-2 rounded-md mt-4"
-              >
-                <Text className="text-primaryBlue font-bold text-center">
-                  Enviar
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={closeModal}
-                className="w-full bg-red-500 py-2 rounded-md mt-4"
-              >
-                <Text className="text-primaryBlue font-bold text-center">
-                  Cancelar
-                </Text>
-              </TouchableOpacity>
-            </View>
+        <View className="flex-row items-center justify-between mt-3 mb-6">
+          <View className="w-[40%]">
+            <Button
+              onPress={() => router.back()}
+              style="border border-secondaryBlue bg-fondoApp"
+              style2="text-secondaryBlue"
+            >
+              Anterior
+            </Button>
           </View>
-        </Modal>
+          <View className="w-[40%]">
+            <Button onPress={() => router.push("/citas")}>Cancelar</Button>
+          </View>
+        </View>
       </ScrollView>
+
+      {/* Modal de Feedback */}
+      <FeedbackModal
+        visible={isFeedbackModalVisible}
+        onClose={() => {
+          setFeedbackModalVisible(false);
+          router.push("/cuenta/historialcitas");
+        }}
+        userId={user?.id}
+      />
     </Screen>
   );
 }
