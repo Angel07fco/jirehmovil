@@ -3,7 +3,7 @@ name: Build and Deploy APK to Itch.io
 on:
   push:
     branches:
-      - main # Ejecuta el workflow al realizar un push en la rama principal
+      - master # Ejecuta el workflow al realizar un push en la rama principal
 
 jobs:
   build-and-deploy:
