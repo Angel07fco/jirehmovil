@@ -1,17 +1,17 @@
-name: Build and Deploy to Itch.io
+name: Build and Deploy APK to Itch.io
 
 on:
   push:
     branches:
-      - master # Despliegue en la rama principal
+      - main # Ejecuta el workflow al realizar un push en la rama principal
 
 jobs:
-  deploy:
-    name: Build and Deploy to Itch.io
+  build-and-deploy:
+    name: Build and Deploy APK to Itch.io
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout del código
+      # 1. Checkout del repositorio
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -21,11 +21,21 @@ jobs:
         with:
           node-version: 18
 
-      # 3. Instalar dependencias y configurar entorno de React Native
+      # 3. Instalar dependencias de npm
       - name: Install dependencies
         run: npm install
 
-      # 4. Configurar Java 17
+      # 4. Instalar EAS CLI
+      - name: Install EAS CLI
+        run: npm install -g eas-cli
+
+      # 5. Autenticar con Expo
+      - name: Authenticate with Expo
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: eas whoami
+
+      # 6. Configurar Java 17
       - name: Install Java 17
         run: |
           sudo apt update
@@ -33,55 +43,34 @@ jobs:
           echo "JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> $GITHUB_ENV
           echo "PATH=$JAVA_HOME/bin:$PATH" >> $GITHUB_ENV
 
-      # 5. Verificar la instalación de Java
+      # 7. Verificar la instalación de Java
       - name: Check Java version
         run: java -version
 
-      # 6. Instalar Android SDK y herramientas necesarias
-      - name: Install Android SDK
-        uses: reactivecircus/android-emulator-runner@v2
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y lib32z1 lib32stdc++6
-          mkdir -p $ANDROID_HOME/cmdline-tools/latest
-          curl -o commandlinetools.zip https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip
-          unzip commandlinetools.zip -d $ANDROID_HOME/cmdline-tools/latest
-          rm commandlinetools.zip
-          yes | sdkmanager --licenses
-          sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.0"
+      # 8. Construir el APK usando EAS
+      - name: Build APK using EAS
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: eas build --platform android --profile apk-release --non-interactive
 
-      # 7. Asegurar permisos de ejecución para gradlew
-      - name: Ensure gradlew is executable
-        run: chmod +x android/gradlew
-
-      # 8. Construir el APK usando Gradle
-      - name: Build APK using Gradle
-        run: |
-          cd android
-          ./gradlew assembleRelease
-
-      # 9. Listar el directorio de salida del APK
-      - name: List APK output directory
-        run: ls -la android/app/build/outputs/apk/release/
-
-      # 10. Descargar Butler desde broth (servidor recomendado)
+      # 9. Descargar Butler desde broth (servidor recomendado)
       - name: Download Butler
         run: |
           curl -L -o butler.zip https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
           unzip butler.zip
           chmod +x butler
 
-      # 11. Verificar la instalación de Butler
+      # 10. Verificar la instalación de Butler
       - name: Butler version check
         run: ./butler -V
 
-      # 12. Empaquetar el archivo APK generado
+      # 11. Preparar el archivo APK para Itch.io
       - name: Prepare APK for Itch.io
         run: |
           mkdir -p debug
-          cp android/app/build/outputs/apk/release/app-release.apk debug/clinicaJireh.apk
+          cp build/*.apk debug/clinicaJireh.apk
 
-      # 13. Subir el archivo APK a Itch.io usando Butler
+      # 12. Subir el archivo APK a Itch.io usando Butler
       - name: Push to Itch.io
         env:
           BUTLER_API_KEY: ${{ secrets.ITCH_API_KEY }}
