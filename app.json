@@ -22,7 +22,7 @@
         "foregroundImage": "./assets/jireh.jpg",
         "backgroundColor": "#ffffff"
       },
-      "newArchEnabled": true,
+      "newArchEnabled": false,
       "bridgelessEnabled": false,
       "package": "com.angelfco.jireh"
     },
