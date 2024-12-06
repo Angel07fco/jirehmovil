@@ -35,7 +35,6 @@ jobs:
   build-and-deploy:
     name: Build and Deploy APK to Itch.io
     runs-on: ubuntu-latest
-    needs: test-app
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
