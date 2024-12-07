@@ -14,7 +14,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "newArchEnabled": true
+      "newArchEnabled": false
     },
     "android": {
       "adaptiveIcon": {
@@ -29,9 +29,6 @@
     },
     "plugins": ["expo-router"],
     "extra": {
-      "router": {
-        "origin": false
-      },
       "eas": {
         "projectId": "e5579975-1993-45d4-9486-0ff00a2dd641"
       }
