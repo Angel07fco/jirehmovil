@@ -4,26 +4,24 @@
     "slug": "jireh",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/jireh.jpg",
+    "icon": "./assets/jireh.png",
     "userInterfaceStyle": "light",
     "scheme": "jireh",
     "splash": {
-      "image": "./assets/jirehslider.jpg",
+      "image": "./assets/jirehslider.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
       "supportsTablet": true,
-      "newArchEnabled": true,
-      "bridgelessEnabled": false
+      "newArchEnabled": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/jireh.jpg",
+        "foregroundImage": "./assets/jireh.png",
         "backgroundColor": "#ffffff"
       },
       "newArchEnabled": false,
-      "bridgelessEnabled": false,
       "package": "com.angelfco.jireh"
     },
     "web": {
