@@ -47,10 +47,20 @@ jobs:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: eas build --platform android --profile production --non-interactive
 
+      - name: Fetch APK URL from Logs
+        id: fetch-url
+        run: |
+          APK_URL=$(eas build:list --json | jq -r '.[0].artifacts.buildUrl')
+          echo "APK_URL=$APK_URL" >> $GITHUB_ENV
+
       - name: Download APK
         run: |
           mkdir -p debug
-          cp .eas/builds/*/*.apk debug/clinicaJireh.apk
+          if [ -z "$APK_URL" ]; then
+            echo "APK URL not found in logs. Build may have failed."
+            exit 1
+          fi
+          curl -o debug/clinicaJireh.apk "$APK_URL"
 
       - name: Install Butler
         run: |
