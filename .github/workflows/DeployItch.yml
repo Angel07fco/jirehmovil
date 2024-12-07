@@ -9,29 +9,6 @@ on:
       - master
 
 jobs:
-  install-dependencies:
-    name: Install Dependencies
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: "18"
-
-      - name: Cache Node.js modules
-        uses: actions/cache@v3
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install dependencies
-        run: npm install
-
   build-and-deploy:
     name: Build and Deploy APK to Itch.io
     runs-on: ubuntu-latest
@@ -43,6 +20,12 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: "18"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Reinstall expo-router
+        run: npm install expo-router@latest
 
       - name: Install EAS CLI
         run: npm install -g eas-cli
