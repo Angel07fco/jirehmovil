@@ -47,20 +47,30 @@ jobs:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: eas build --platform android --profile production --non-interactive
 
-      - name: Fetch APK URL from Logs
+      - name: Fetch APK or AAB URL from Logs
         id: fetch-url
         run: |
-          APK_URL=$(eas build:list --json | jq -r '.[0].artifacts.buildUrl')
-          echo "APK_URL=$APK_URL" >> $GITHUB_ENV
-
-      - name: Download APK
-        run: |
-          mkdir -p debug
-          if [ -z "$APK_URL" ]; then
-            echo "APK URL not found in logs. Build may have failed."
+          OUTPUT=$(eas build:list --json --non-interactive)
+          if [ -z "$OUTPUT" ]; then
+            echo "No builds found in the list. Stopping the workflow."
             exit 1
           fi
-          curl -o debug/clinicaJireh.apk "$APK_URL"
+          URL=$(echo $OUTPUT | jq -r '[.[] | select(.status == "FINISHED")][0].artifacts.buildUrl')
+          if [ "$URL" = "null" ] || [ -z "$URL" ]; then
+            echo "No URL found for the latest build. Stopping the workflow."
+            exit 1
+          fi
+          echo "APK_OR_AAB_URL=$URL" >> $GITHUB_ENV
+          echo "Found URL: $URL"
+
+      - name: Download APK or AAB
+        run: |
+          mkdir -p debug
+          if [ -z "$APK_OR_AAB_URL" ]; then
+            echo "No URL provided. Exiting."
+            exit 1
+          fi
+          curl -o debug/clinicaJireh.apk-or-aab "$APK_OR_AAB_URL"
 
       - name: Install Butler
         run: |
@@ -73,10 +83,10 @@ jobs:
         env:
           BUTLER_API_KEY: ${{ secrets.ITCH_API_KEY }}
         run: |
-          if [ -f "debug/clinicaJireh.apk" ]; then
-            echo "APK file found. Deploying to Itch.io..."
-            butler push debug/clinicaJireh.apk abelardo20200782/proyectojireh:android
+          if [ -f "debug/clinicaJireh.apk-or-aab" ]; then
+            echo "Artifact file found. Deploying to Itch.io..."
+            butler push debug/clinicaJireh.apk-or-aab abelardo20200782/proyectojireh:android
           else
-            echo "APK file not found. Stopping deployment."
+            echo "Artifact file not found. Stopping deployment."
             exit 1
           fi
