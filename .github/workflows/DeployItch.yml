@@ -24,6 +24,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Run Jest tests
+        run: |
+          echo "Running tests..."
+          npm test -- --ci --passWithNoTests
+        env:
+          CI: true
+
       - name: Reinstall expo-router
         run: npm install expo-router@latest
 
