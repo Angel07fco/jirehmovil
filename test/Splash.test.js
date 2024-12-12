@@ -9,7 +9,7 @@ describe("Splash Screen", () => {
     const { getByText, getByTestId } = render(<Splash />);
 
     // Verifica que el texto se renderiza
-    expect(getByText("Abelardo 12.12.2024 2:16")).toBeTruthy();
+    expect(getByText("Bienvenidos a JIREH")).toBeTruthy();
 
     // Verifica que la imagen se renderiza usando el testID
     const image = getByTestId("splash-image");
