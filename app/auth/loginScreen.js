@@ -19,8 +19,9 @@ export default function Index() {
           source={splashImage}
           className="w-2/6 h-2/6"
           resizeMode="contain"
+          testID="splash-image"
         />
-        <Login />
+        <Login testID="login-component"/>
       </View>
     </View>
   );

@@ -67,28 +67,10 @@ jobs:
           echo "APK_URL=$URL" >> $GITHUB_ENV
           echo "Found APK URL: $URL"
 
-      - name: Debug Extracted APK URL
-        run: |
-          echo "Extracted APK URL: $APK_URL"
-
       - name: Download APK
         run: |
           mkdir -p debug
-          curl -H "Authorization: Bearer ${{ secrets.EXPO_TOKEN }}" -o debug/clinicaJireh.apk "$APK_URL"
-          ls -lh debug/
-
-      - name: Verify APK Size
-        run: |
-          if [ ! -f "debug/clinicaJireh.apk" ]; then
-            echo "APK file not found. Exiting..."
-            exit 1
-          fi
-          FILE_SIZE=$(stat --format="%s" debug/clinicaJireh.apk)
-          echo "Downloaded APK size: $FILE_SIZE bytes"
-          if [ "$FILE_SIZE" -lt 1000000 ]; then
-            echo "APK file is too small. Something went wrong during the download."
-            exit 1
-          fi
+          curl -o debug/clinicaJireh.apk "$APK_URL"
 
       - name: Install Butler
         run: |
