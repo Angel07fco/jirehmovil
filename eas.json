@@ -1,0 +1,30 @@
+{
+  "build": {
+    "apk-debug": {
+      "android": {
+        "gradleCommand": ":app:assembleDebug"
+      }
+    },
+    "apk-release": {
+      "android": {
+        "gradleCommand": ":app:assembleRelease"
+      }
+    },
+    "apk-release-simple": {
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "development": {
+      "developmentClient": true
+    },
+    "production": {
+      "android": {
+        "buildType": "apk"
+      }
+    }
+  },
+  "cli": {
+    "appVersionSource": "remote"
+  }
+}

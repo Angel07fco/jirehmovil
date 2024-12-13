@@ -42,6 +42,7 @@ jobs:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: eas whoami
 
+<<<<<<< HEAD
       - name: Extract APK URL from Provided Link
         id: extract-url
         run: |
@@ -52,10 +53,37 @@ jobs:
           fi
           echo "APK_URL=$URL" >> $GITHUB_ENV
           echo "Using provided APK URL: $URL"
+=======
+      - name: Install Java 17
+        run: |
+          sudo apt update
+          sudo apt install -y openjdk-17-jdk
+          echo "JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> $GITHUB_ENV
+          echo "PATH=$JAVA_HOME/bin:$PATH" >> $GITHUB_ENV
+
+      - name: Build APK using EAS
+        id: build-apk
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          eas build --platform android --profile production --non-interactive | tee build-log.txt
+
+      - name: Extract APK URL from Logs
+        id: extract-url
+        run: |
+          URL=$(grep -oP 'https://expo.dev/artifacts/eas/\S+\.apk' build-log.txt | tail -1)
+          if [ -z "$URL" ]; then
+            echo "Failed to extract APK URL from build logs."
+            exit 1
+          fi
+          echo "APK_URL=$URL" >> $GITHUB_ENV
+          echo "Found APK URL: $URL"
+>>>>>>> ff0a384adea874ecde2c4fd84aa4244fb3529394
 
       - name: Download APK
         run: |
           mkdir -p debug
+<<<<<<< HEAD
           curl -L --output debug/clinicaJireh.apk "$APK_URL"
           APK_SIZE=$(stat --printf="%s" debug/clinicaJireh.apk)
           if [ "$APK_SIZE" -lt 70000000 ]; then
@@ -63,6 +91,9 @@ jobs:
             exit 1
           fi
           echo "APK downloaded successfully."
+=======
+          curl -o debug/clinicaJireh.apk "$APK_URL"
+>>>>>>> ff0a384adea874ecde2c4fd84aa4244fb3529394
 
       - name: Install Butler
         run: |
@@ -81,4 +112,8 @@ jobs:
           else
             echo "APK file not found. Stopping deployment."
             exit 1
+<<<<<<< HEAD
           fi
+=======
+          fi
+>>>>>>> ff0a384adea874ecde2c4fd84aa4244fb3529394

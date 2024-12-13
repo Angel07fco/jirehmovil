@@ -15,7 +15,9 @@ const CardCitaInfo = ({
       className={`w-full p-2 border border-gray-400 bg-fondoApp rounded-lg ${style}`}
     >
       <View className="flex-row items-center">
-        <Text className="font-bold text-secondaryBlue text-base">{fecha}</Text>
+        <Text className="font-bold text-secondaryBlue text-base ml-6">
+          {fecha}
+        </Text>
         <Text className="font-bold text-secondaryBlue text-base mx-2">|</Text>
         <Text className="font-bold text-secondaryBlue text-base">{hora}</Text>
       </View>

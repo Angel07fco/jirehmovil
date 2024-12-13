@@ -148,14 +148,8 @@ export default function historialcitas() {
 
               <View className="mt-6">
                 <CardOption
-                  icon={OpinionIcon}
-                  title="Citas que esperan tu opinión"
-                  rightIcon={ArrowRightIcon}
-                  onPress={() => router.push("/auth/citasPorOpinar")}
-                />
-                <CardOption
                   icon={VerifyIcon}
-                  title="Citas que ya di mi opinión"
+                  title="Historial de citas"
                   rightIcon={ArrowRightIcon}
                   onPress={() => router.push("/auth/citasOpinadas")}
                 />
