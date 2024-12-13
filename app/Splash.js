@@ -11,9 +11,7 @@ export default function Splash() {
         resizeMode="contain"
         testID="splash-image"
       />
-      <Text className="text-xl text-secondaryBlue font-bold">
-        Bienvenidos a JIREH
-      </Text>
+      <Text className="text-xl text-secondaryBlue font-bold">Hola mundo</Text>
     </View>
   );
 }
