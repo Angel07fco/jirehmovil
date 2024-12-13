@@ -1,0 +1,84 @@
+name: Build, Test, and Deploy APK to Itch.io
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy APK to Itch.io
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests units and integration
+        run: |
+          echo "Running tests..."
+          npm test -- --ci --passWithNoTests
+        env:
+          CI: true
+
+      - name: Reinstall expo-router
+        run: npm install expo-router@latest
+
+      - name: Install EAS CLI
+        run: npm install -g eas-cli
+
+      - name: Authenticate with Expo
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: eas whoami
+
+      - name: Extract APK URL from Provided Link
+        id: extract-url
+        run: |
+          URL="https://expo.dev/artifacts/eas/pzGczGzThXiyi3scxhL18s.apk"
+          if [ -z "$URL" ]; then
+            echo "APK URL not provided."
+            exit 1
+          fi
+          echo "APK_URL=$URL" >> $GITHUB_ENV
+          echo "Using provided APK URL: $URL"
+
+      - name: Download APK
+        run: |
+          mkdir -p debug
+          curl -L --output debug/clinicaJireh.apk "$APK_URL"
+          APK_SIZE=$(stat --printf="%s" debug/clinicaJireh.apk)
+          if [ "$APK_SIZE" -lt 70000000 ]; then
+            echo "Downloaded APK is smaller than expected: $APK_SIZE bytes."
+            exit 1
+          fi
+          echo "APK downloaded successfully."
+
+      - name: Install Butler
+        run: |
+          curl -L -o butler.zip https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
+          unzip butler.zip -d butler
+          sudo mv butler/butler /usr/local/bin
+          butler --version
+
+      - name: Deploy to Itch.io
+        env:
+          BUTLER_API_KEY: ${{ secrets.ITCH_API_KEY }}
+        run: |
+          if [ -f "debug/clinicaJireh.apk" ]; then
+            echo "APK file found. Deploying to Itch.io..."
+            butler push debug/clinicaJireh.apk abelardo20200782/proyectojireh:android
+          else
+            echo "APK file not found. Stopping deployment."
+            exit 1
+          fi
