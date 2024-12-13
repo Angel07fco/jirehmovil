@@ -63,7 +63,7 @@ export default function Main() {
         <View className="w-full mb-5">
           <Header />
         </View>
-        <TitleText>Servicios 12.12.2024 1:00</TitleText>
+        <TitleText>Angel Francisco 12.12.2024 2:21</TitleText>
         <View className="flex-row flex-wrap justify-between w-full gap-y-4 mb-8">
           {services.map((service) => (
             <View key={service._id} className="w-[30%]">
