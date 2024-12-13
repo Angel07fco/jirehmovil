@@ -42,35 +42,27 @@ jobs:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: eas whoami
 
-      - name: Install Java 17
-        run: |
-          sudo apt update
-          sudo apt install -y openjdk-17-jdk
-          echo "JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> $GITHUB_ENV
-          echo "PATH=$JAVA_HOME/bin:$PATH" >> $GITHUB_ENV
-
-      - name: Build APK using EAS
-        id: build-apk
-        env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-        run: |
-          eas build --platform android --profile production --non-interactive | tee build-log.txt
-
-      - name: Extract APK URL from Logs
+      - name: Extract APK URL from Provided Link
         id: extract-url
         run: |
-          URL=$(grep -oP 'https://expo.dev/artifacts/eas/\S+\.apk' build-log.txt | tail -1)
+          URL="https://expo.dev/artifacts/eas/pzGczGzThXiyi3scxhL18s.apk"
           if [ -z "$URL" ]; then
-            echo "Failed to extract APK URL from build logs."
+            echo "APK URL not provided."
             exit 1
           fi
           echo "APK_URL=$URL" >> $GITHUB_ENV
-          echo "Found APK URL: $URL"
+          echo "Using provided APK URL: $URL"
 
       - name: Download APK
         run: |
           mkdir -p debug
-          curl -o debug/clinicaJireh.apk "$APK_URL"
+          curl -L --output debug/clinicaJireh.apk "$APK_URL"
+          APK_SIZE=$(stat --printf="%s" debug/clinicaJireh.apk)
+          if [ "$APK_SIZE" -lt 70000000 ]; then
+            echo "Downloaded APK is smaller than expected: $APK_SIZE bytes."
+            exit 1
+          fi
+          echo "APK downloaded successfully."
 
       - name: Install Butler
         run: |
