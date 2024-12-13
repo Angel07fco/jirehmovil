@@ -42,16 +42,30 @@ jobs:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: eas whoami
 
-      - name: Extract APK URL from Provided Link
+      - name: Install Java 17
+        run: |
+          sudo apt update
+          sudo apt install -y openjdk-17-jdk
+          echo "JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> $GITHUB_ENV
+          echo "PATH=$JAVA_HOME/bin:$PATH" >> $GITHUB_ENV
+
+      - name: Build APK using EAS
+        id: build-apk
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          eas build --platform android --profile production --non-interactive | tee build-log.txt
+
+      - name: Extract APK URL from Logs
         id: extract-url
         run: |
-          URL="https://expo.dev/artifacts/eas/pzGczGzThXiyi3scxhL18s.apk"
+          URL=$(grep -oP 'https://expo.dev/artifacts/eas/\S+\.apk' build-log.txt | tail -1)
           if [ -z "$URL" ]; then
-            echo "APK URL not provided."
+            echo "Failed to extract APK URL from build logs."
             exit 1
           fi
           echo "APK_URL=$URL" >> $GITHUB_ENV
-          echo "Using provided APK URL: $URL"
+          echo "Found APK URL: $URL"
 
       - name: Download APK
         run: |
